@@ -55,7 +55,7 @@ then the counter-attack is done successfully, as the attacker's replay transacti
 - Quickly start a local anvil node (and disable auto mining):
 
   ```bash
-  anvil --fork-url https://eth-mainnet.g.alchemy.com/v2/<YOUR_API_KEY> --order fees --fork-block-number 14684299 --port 8545 --host 127.0.0.1 allow-origin \"*\" --chain-id 1 --no-mining --timestamp 0 --disable-block-gas-limit --block-base-fee-per-gas 0 --transaction-block-keeper 20
+  anvil --fork-url https://eth-mainnet.g.alchemy.com/v2/<YOUR_API_KEY> --order fees --fork-block-number 14684299 --port 8545 --host 127.0.0.1 --allow-origin \"*\" --chain-id 1 --no-mining --timestamp 0 --disable-block-gas-limit --block-base-fee-per-gas 0 --transaction-block-keeper 20
   ```
 
 - Run any tests:
