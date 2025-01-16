@@ -50,6 +50,7 @@
         [(ebc::swapx? node) (ebc::swapx (ebc::swapx-x node))] ; copy
         [(ebc::logx? node) (ebc::logx (ebc::logx-x node))] ; copy
         [(ebc::invalid? node) (ebc::invalid (ebc::invalid-x node))] ; copy
+        [(ebc::ending? node) (ebc::ending (ebc::ending-v node))] ; copy
         [else ((struct-constructor node))] ; direct copy
     )
 )
@@ -111,6 +112,10 @@
         [(ebc::invalid? node) (let ([x (ebc::invalid-x node)])
             (define new-x (if (hole? x) (list-ref assignment (hole-id x)) x))
             (ebc::invalid new-x)
+        )]
+        [(ebc::ending? node) (let ([v (ebc::ending-v node)])
+            (define new-v (if (hole? v) (list-ref assignment (hole-id v)) v))
+            (ebc::ending new-v)
         )]
         [(hole? node) (list-ref assignment (hole-id node))] ; assign to hole
         [else ((struct-constructor node))] ; direct copy
