@@ -113,6 +113,15 @@
 ; fe is invalid
 (struct selfdestruct () #:mutable #:transparent #:reflection-name 'selfdestruct) ; ff
 
+; special ending operator
+; - EVM doesn't check bytecode types, which will cause a corner case
+;   where a pushx operator requires for chars longer than remaining ones at the end of bytecode
+;   e.g., PUSH20 0x6f6c63430008090033 of tx: 0x99c760442aecf00d46ecad7739f7935c41d76b2f850253f19eaa7c4e7a6d0045
+;   while this instruction will never be executed, we use the ending operator to wrap the data
+;   and the ending operator can only be the last operator of bytecode (cannot appear in the middle)
+; - only pushx operator parsing can fallback to ending operator
+(struct ending (v) #:mutable #:transparent #:reflection-name 'ending)
+
 (define ops (list
     ; 0
     stop add mul sub div sdiv mod smod

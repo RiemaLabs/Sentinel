@@ -31,10 +31,17 @@
                     ; pushx series
                     [(equal? 'pushx on)
                         (define x (- oid #x5f))
+                        ; a hex char is 4-bit, pushx requries x byte, so offset should be double x
                         (define offset (* 2 x))
-                        (let ([r0 (take cr offset)][crr (drop cr offset)])
-                            (define v0 (hexchars->decimal r0))
-                            (cons (ebc::pushx x v0) (chars->ebc crr))
+                        (if (> offset (length cr))
+                            ; syntax error, fall back to ending operator
+                            ; this implies that we've reached the end of bytecode
+                            (cons (ebc::ending (hexchars->decimal cs)) null)
+                            ; syntax correct, perform normal parsing
+                            (let ([r0 (take cr offset)][crr (drop cr offset)])
+                                (define v0 (hexchars->decimal r0))
+                                (cons (ebc::pushx x v0) (chars->ebc crr))
+                            )
                         )
                     ]
                     ; dupx series
@@ -91,6 +98,8 @@
                     [(equal? 'logx on0) (number->hexstr (+ #xa0 (ebc::logx-x op0)) 2 #f)]
                     ; invalid series
                     [(equal? 'invalid on0) (number->hexstr (ebc::invalid-x op0) 2 #f)]
+                    ; ending operator
+                    [(equal? 'ending on0) (number->hexstr (ebc::ending-v op0) 2 #f)]
                     ; all other operators
                     [else (number->hexstr (hash-ref ebc::on2oid on0) 2 #f)]
                 )
